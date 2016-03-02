@@ -1,6 +1,6 @@
 # Not built
 elasticsearch:
-  image: elasticsearch:latest
+  image: index.alauda.cn/library/elasticsearch:latest
   ports:
     - "9200:9200"
 
@@ -14,11 +14,15 @@ logstash:
 collectd:
   hostname: collectd01
   domainname: collectd01.com
-  build: collectd/
+  image: index.alauda.cn/library/elasticsearch:latest
+  privileged: true
   ports:
    - "25826:25826/udp"
   links:
    - logstash
+  environment:
+   - INFLUXDB_SERVER=logstash
+   - INFLUXDB_PORT=25826
 
 kibana:
   build: kibana/
