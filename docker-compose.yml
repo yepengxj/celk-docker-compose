@@ -1,8 +1,8 @@
 # Not built
 elasticsearch:
-  image: index.alauda.cn/library/elasticsearch:latest
+  image: index.alauda.cn/library/elasticsearch
   ports:
-    - "9200:9200"
+    - 9200:9200
 
 logstash:
   build: logstash/
@@ -14,8 +14,11 @@ logstash:
 collectd:
   hostname: collectd01
   domainname: collectd01.com
-  image: index.alauda.cn/library/elasticsearch:latest
+  image:  index.alauda.cn/asiainfoldp/collectd-new 
   privileged: true
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  
   ports:
    - "25826:25826/udp"
   links:
