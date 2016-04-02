@@ -1,1 +1,1 @@
-FROM opneshift/origin-logging-elasticsearch
+FROM openshift/origin-logging-elasticsearch
