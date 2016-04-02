@@ -1,1 +1,1 @@
-FROM origin-logging-curator
+FROM openshift/origin-logging-curator
