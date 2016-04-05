@@ -1,0 +1,90 @@
+[hekad]
+maxprocs = 1
+
+#[ProcStats]
+#type = "FilePollingInput"
+#ticker_interval = 1
+#file_path = "/proc/stat"
+#decoder = "ProcStatDecoder"
+
+#[ProcStatDecoder]
+#type = "SandboxDecoder"
+#filename = "lua_decoders/linux_procstat.lua"
+
+
+
+#[MemStats]
+#type = "FilePollingInput"
+#ticker_interval = 1
+#file_path = "/proc/meminfo"
+#decoder = "MemStatsDecoder"
+
+#[MemStatsDecoder]
+#type = "SandboxDecoder"
+#filename = "lua_decoders/linux_memstats.lua"
+
+
+#[NetNetstat]
+#type = "FilePollingInput"
+#ticker_interval = 1
+#file_path = "/proc/net/netstat"
+#decoder = "NetstatDecoder"
+
+#[NetSnmp]
+#type = "FilePollingInput"
+#ticker_interval = 1
+#file_path = "/proc/net/snmp"
+#decoder = "NetstatDecoder"
+
+#[NetstatDecoder]
+#type = "SandboxDecoder"
+#filename = "lua_decoders/linux_netstat.lua"
+
+
+#[DockerEventInput]
+#type = "DockerEventInput"
+
+#[PayloadEncoder]
+#append_newlines = false
+
+
+
+#[DockerLogInput]
+#decoder = "DockerLogDecoder"
+
+#[DockerLogDecoder]
+#type = "SandboxDecoder"
+#filename = "lua_decoders/json.lua"
+
+#    [DockerLogDecoder.config]
+#    type = "DockerLog"
+#    payload_keep = true
+#    map_fields = true
+#    Severity = "severity"
+
+[HttpListenInput]
+address = "0.0.0.0:8325"
+decoder = "K8s_monitor"
+
+[K8s_monitor]
+type = "SandboxDecoder"
+filename = "lua_decoders/json.lua"
+
+    [K8s_monitor.config]
+    type = "K8s_monitor"
+    payload_keep = false
+    map_fields = true
+
+
+[ESJsonEncoder]
+index = "heka-%{Type}-%{%Y.%m.%d}"
+es_index_from_timestamp = true
+type_name = "%{Type}"
+    [ESJsonEncoder.field_mappings]
+    Timestamp = "@timestamp"
+
+[ElasticSearchOutput]
+message_matcher = "Type != ''"
+server = "http://elasticsearch:9200"
+encoder = "ESJsonEncoder"
+flush_interval = 50

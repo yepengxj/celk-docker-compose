@@ -26,7 +26,19 @@ collectd:
   environment:
    - INFLUXDB_SERVER=logstash
    - INFLUXDB_PORT=25826
-
+heka:
+  hostname: heka01
+  domainname: heka01.com
+  image: index.alauda.cn/asiainfoldp/docker-heka
+  privileged: true
+  volumes:
+    - ./config.toml:/app/config.toml
+    - /var/run/docker.sock:/var/run/docker.sock
+  links:
+    - elasticsearch
+  ports:
+    - "8325:8325"
+  
 kibana:
   build: kibana/
   ports:
