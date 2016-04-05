@@ -78,7 +78,7 @@ LoadPlugin logfile
 #LoadPlugin apache
 #LoadPlugin apcups
 #LoadPlugin ascent
-#LoadPlugin battery
+LoadPlugin battery
 #LoadPlugin bind
 #LoadPlugin cgroups
 #LoadPlugin conntrack
@@ -94,18 +94,18 @@ LoadPlugin df
 LoadPlugin disk
 #LoadPlugin dns
 #LoadPlugin email
-#LoadPlugin entropy
+LoadPlugin entropy
 #LoadPlugin ethstat
 #LoadPlugin exec
 #LoadPlugin filecount
 #LoadPlugin fscache
 #LoadPlugin gmond
 #LoadPlugin hddtemp
-#LoadPlugin interface
+LoadPlugin interface
 #LoadPlugin ipmi
 #LoadPlugin iptables
 #LoadPlugin ipvs
-#LoadPlugin irq
+LoadPlugin irq
 #LoadPlugin java
 #LoadPlugin libvirt
 LoadPlugin load
@@ -137,7 +137,7 @@ LoadPlugin network
 #LoadPlugin ping
 #LoadPlugin postgresql
 #LoadPlugin powerdns
-#LoadPlugin processes
+LoadPlugin processes
 #LoadPlugin protocols
 <LoadPlugin python>
 	Globals true
@@ -148,7 +148,7 @@ LoadPlugin rrdtool
 #LoadPlugin serial
 #LoadPlugin snmp
 #LoadPlugin statsd
-#LoadPlugin swap
+LoadPlugin swap
 #LoadPlugin table
 #LoadPlugin tail
 #LoadPlugin tail_csv
@@ -159,7 +159,7 @@ LoadPlugin rrdtool
 #LoadPlugin tokyotyrant
 #LoadPlugin unixsock
 #LoadPlugin uptime
-#LoadPlugin users
+LoadPlugin users
 #LoadPlugin uuid
 #LoadPlugin varnish
 #LoadPlugin vmem
