@@ -1,0 +1,6 @@
+script.inline: on  
+script.indexed: on 
+script.engine.groovy.inline.aggs: on 
+script.groovy.sandbox.enabled: true
+script.engine.groovy.inline.update: on
+network.host: 0.0.0.0
