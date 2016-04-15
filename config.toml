@@ -11,8 +11,6 @@ maxprocs = 1
 #type = "SandboxDecoder"
 #filename = "lua_decoders/linux_procstat.lua"
 
-
-
 #[MemStats]
 #type = "FilePollingInput"
 #ticker_interval = 1
@@ -23,44 +21,51 @@ maxprocs = 1
 #type = "SandboxDecoder"
 #filename = "lua_decoders/linux_memstats.lua"
 
+[DockerEventInput]
+type = "DockerEventInput"
 
-#[NetNetstat]
-#type = "FilePollingInput"
-#ticker_interval = 1
-#file_path = "/proc/net/netstat"
-#decoder = "NetstatDecoder"
+#[input]
+#type = "LogstreamerInput"
+#log_directory = "/var/lib/docker/containers"
+#file_match = '(?P<Container>[^/]+)/[a-zA-Z0-9]+-json.log'
+#priority = ["^Index"]
+#differentiator = ["Container"]
 
-#[NetSnmp]
-#type = "FilePollingInput"
-#ticker_interval = 1
-#file_path = "/proc/net/snmp"
-#decoder = "NetstatDecoder"
-
-#[NetstatDecoder]
-#type = "SandboxDecoder"
-#filename = "lua_decoders/linux_netstat.lua"
+#[DockerLogsInput]
+#type = "DockerLogInput"
+#decoder = "RegexDecoder"
+#can_exit = true
 
 
-#[DockerEventInput]
-#type = "DockerEventInput"
+#[MultiDecoder]
+#type = "MultiDecoder"
+#subs = ['JsonDecoder', 'RegexDecoder']
+#subs = ['RegexDecoder']
+#cascade_strategy = "first-wins"
+#log_sub_errors = true
 
-#[PayloadEncoder]
-#append_newlines = false
 
-
-
-#[DockerLogInput]
-#decoder = "DockerLogDecoder"
-
-#[DockerLogDecoder]
+#[JsonDecoder]
 #type = "SandboxDecoder"
 #filename = "lua_decoders/json.lua"
-
-#    [DockerLogDecoder.config]
-#    type = "DockerLog"
+#
+#    [JsonDecoder.config]
 #    payload_keep = true
 #    map_fields = true
-#    Severity = "severity"
+
+[RegexDecoder]
+type = "PayloadRegexDecoder"
+match_regex = "(?P<message>.*)"
+
+	[RegexDecoder.message_fields]
+	message = "%message%"
+
+#[dockerConfig]
+#type = "LogstreamerInput"
+#log_directory = "/var/lib/docker/containers"
+#file_match = '(?P<Container>[^/]+)/config(.v2)?.json'
+#differentiator = ["Container", "-config"]
+#splitter = "NullSplitter"
 
 [HttpListenInput]
 address = "0.0.0.0:8325"
@@ -75,6 +80,8 @@ filename = "lua_decoders/json.lua"
     payload_keep = false
     map_fields = true
 
+[DashboardOutput]
+ticker_interval = 30
 
 [ESJsonEncoder]
 index = "heka-%{Type}-%{%Y.%m.%d}"

@@ -1,6 +1,8 @@
 # Not built
 elasticsearch:
   image: index.alauda.cn/library/elasticsearch
+  volumes:
+    - ./elastic/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
   ports:
     - 9200:9200
 
@@ -8,16 +10,19 @@ logstash:
   build: logstash/
   ports:
     - "5000:5000"
+    - "38080:38080"
+    - "25826:25826/udp"
   links:
     - elasticsearch
 
 collectd:
-  hostname: collectd01
-  domainname: collectd01.com
+  hostname: openshift-route
+  domainname: openshift-route.novalocal
   image:  index.alauda.cn/asiainfoldp/collectd-new 
   privileged: true
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
+    - /root/docker-collectd-rrdcached/docker-collectd-plugin:/docker-collectd-plugin
 #  ports:
 #   - "25826:25826/udp"
   links:
@@ -33,14 +38,16 @@ heka:
   volumes:
     - ./config.toml:/app/config.toml
     - /var/run/docker.sock:/var/run/docker.sock
+    - /var/lib/docker:/var/lib/docker
   links:
     - elasticsearch
   ports:
     - "8325:8325"
+    - "4352:4352"
   
 kibana:
   build: kibana/
   ports:
-    - "5601:5601"
+    - "35601:5601"
   links:
     - elasticsearch
